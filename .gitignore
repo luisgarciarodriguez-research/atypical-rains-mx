@@ -1,0 +1,50 @@
+# Bytecode compilado por Python y cachés de herramientas de análisis estático.
+# Se regeneran automáticamente; incluirlos produce diffs sin valor semántico.
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Autoguardados internos de Jupyter y notebooks completos.
+# Los notebooks mezclan código, salidas y metadatos en JSON, lo que genera
+# conflictos difíciles de resolver. El código fuente vive en src/.
+.ipynb_checkpoints/
+*.ipynb
+
+# Entornos virtuales y metadatos de instalación editable.
+# El entorno conda `lluvia` es local a cada máquina. El archivo .env
+# puede contener credenciales y nunca debe versionarse.
+.env
+.venv/
+env/
+venv/
+*.egg-info/
+
+# Archivos derivados del pipeline (reproducibles desde data/raw/).
+# Incluyen composiciones, transformaciones CoDa, flags de las 4 capas,
+# z-scores y el catálogo consolidado de anomalías.
+data/processed/
+data/catalogs/*.parquet
+data/catalogs/zscores.parquet
+data/catalogs/anomalias_catalogo.csv
+
+# Salidas generadas: figuras, presentaciones y reportes binarios.
+# Los archivos .md en outputs/reports/ sí se rastrean por ser documentación
+# legible en texto plano.
+outputs/
+#outputs/figures/
+#outputs/reports/*.pdf
+#outputs/reports/*.pptx
+#outputs/reports/distribution_summary.csv
+
+# Metadatos creados por el sistema operativo; sin significado para el proyecto.
+.DS_Store
+Thumbs.db
+
+# Configuración local de editores; específica de cada desarrollador.
+.vscode/
+.idea/
+*.swp
+*.swo
