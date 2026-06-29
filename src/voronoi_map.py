@@ -247,6 +247,7 @@ def plot_voronoi_map(
       2. Teselas de Voronoi semitransparentes.
       3. Puntos de estaciones coloreados por ``km_lab``.
       4. Centroides marcados con estrella.
+      5. Etiquetas (cXX, n=N) sobre el centroide geométrico de cada celda.
 
     Parameters
     ----------
@@ -297,6 +298,21 @@ def plot_voronoi_map(
             s=160, marker="*",
             color=colors[k_id], edgecolors="#111111",
             linewidths=0.5, zorder=5,
+        )
+
+    # — Capa 5: etiquetas sobre el centroide geométrico de cada celda de Voronoi
+    for k_id, region in enumerate(regions):
+        if region is None or region.is_empty:
+            continue
+        cx, cy = region.centroid.x, region.centroid.y
+        n = cluster_counts.get(k_id, 0)
+        ax.text(
+            cx, cy,
+            f"C{k_id:02d}\nn={n}",
+            ha="center", va="center",
+            fontsize=5.5,
+            zorder=6,
+            bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.55),
         )
 
     # — Leyenda: 2 columnas fuera del área del mapa
