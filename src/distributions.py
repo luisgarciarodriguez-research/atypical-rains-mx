@@ -123,11 +123,11 @@ def t1_3_1_histogram(
     kde0 = gaussian_kde(vals_trunc, bw_method="scott")
     xx0 = np.linspace(0, p99, 400)
     axes[0].plot(xx0, kde0(xx0), color="darkred", linewidth=1.8)
-    axes[0].set_xlabel("Precipitación mensual (mm)")
-    axes[0].set_ylabel("Densidad")
+    axes[0].set_xlabel("Monthly precipitation (mm)")
+    axes[0].set_ylabel("Density")
     axes[0].set_title(
-        f"Escala original (recortado a P99={p99:.0f} mm)\n"
-        f"Media={moments['mean_mm']:.1f}  Mediana={moments['median_mm']:.1f}  "
+        f"Original scale (clipped to P99={p99:.0f} mm)\n"
+        f"Mean={moments['mean_mm']:.1f}  Median={moments['median_mm']:.1f}  "
         f"σ={moments['std_mm']:.1f}  Skew={moments['skewness']:.2f}"
     )
     for pct, label in [(50, "P50"), (90, "P90"), (95, "P95")]:
@@ -142,20 +142,20 @@ def t1_3_1_histogram(
     kde1 = gaussian_kde(vals_log, bw_method="scott")
     xx1 = np.linspace(0, vals_log.max(), 400)
     axes[1].plot(xx1, kde1(xx1), color="darkred", linewidth=1.8)
-    axes[1].set_xlabel("log(precipitación + 1)")
-    axes[1].set_ylabel("Densidad")
+    axes[1].set_xlabel("log(precipitation + 1)")
+    axes[1].set_ylabel("Density")
     axes[1].set_title(
-        f"Escala log(x+1)\n"
-        f"Media={moments['mean_log1p']:.2f}  "
+        f"log(x+1) scale\n"
+        f"Mean={moments['mean_log1p']:.2f}  "
         f"Skew={moments['skewness_log1p']:.2f}  "
         f"Kurt={moments['kurtosis_log1p']:.2f}"
     )
 
-    fig.suptitle("T1.3.1 — Distribución de la precipitación mensual (todas las estaciones)",
+    fig.suptitle("T1.3.1 — Monthly precipitation distribution (all stations)",
                  fontsize=11, y=1.01)
     fig.tight_layout()
     out = FIGURES / "dist_histogram.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return moments, out
 
@@ -169,8 +169,8 @@ def t1_3_2_seasonal(
     Boxplot estacional por mes (1–12) y PCI por estación.
     """
     mg = _monthly_groups(rain_col_map)
-    MONTH_NAMES = ["Ene","Feb","Mar","Abr","May","Jun",
-                   "Jul","Ago","Sep","Oct","Nov","Dic"]
+    MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun",
+                   "Jul","Aug","Sep","Oct","Nov","Dec"]
 
     # Recopilar valores por mes para el boxplot
     month_data: list[np.ndarray] = []
@@ -206,10 +206,10 @@ def t1_3_2_seasonal(
     for patch, color in zip(bp["boxes"], colors_season):
         patch.set_facecolor(color)
         patch.set_alpha(0.8)
-    ax1.set_xlabel("Mes")
-    ax1.set_ylabel("Precipitación mensual (mm)")
-    ax1.set_title("T1.3.2 — Boxplot estacional (sin valores atípicos)\n"
-                  "Azul oscuro = meses húmedos (mayo–octubre)")
+    ax1.set_xlabel("Month")
+    ax1.set_ylabel("Monthly precipitation (mm)")
+    ax1.set_title("T1.3.2 — Seasonal boxplot (without outliers)\n"
+                  "Dark blue = wet months (May–October)")
     ax1.grid(axis="y", alpha=0.3)
 
     # Mediana sobre cada caja
@@ -219,7 +219,7 @@ def t1_3_2_seasonal(
 
     out1 = FIGURES / "dist_seasonal_boxplot.png"
     fig1.tight_layout()
-    fig1.savefig(out1, dpi=140, bbox_inches="tight")
+    fig1.savefig(out1, dpi=900, bbox_inches="tight")
     plt.close(fig1)
 
     # PCI por estación
@@ -254,14 +254,14 @@ def t1_3_2_seasonal(
     axes2[0].hist(df_pci_valid["pci"], bins=40, color="teal", alpha=0.8,
                   edgecolor="white", linewidth=0.3)
     axes2[0].axvline(8.33, color="green", linestyle="--", linewidth=1.2,
-                     label="Uniforme (8.33)")
+                     label="Uniform (8.33)")
     axes2[0].axvline(20, color="orange", linestyle="--", linewidth=1.2,
-                     label="Umbral alta conc. (20)")
+                     label="High conc. threshold (20)")
     axes2[0].set_xlabel("PCI")
-    axes2[0].set_ylabel("N° estaciones")
+    axes2[0].set_ylabel("No. of stations")
     axes2[0].set_title(
-        f"Distribución nacional del PCI (n={len(df_pci_valid):,})\n"
-        f"Mediana={df_pci_valid['pci'].median():.1f}  "
+        f"National PCI distribution (n={len(df_pci_valid):,})\n"
+        f"Median={df_pci_valid['pci'].median():.1f}  "
         f"P90={df_pci_valid['pci'].quantile(0.9):.1f}"
     )
     axes2[0].legend(fontsize=8)
@@ -271,13 +271,13 @@ def t1_3_2_seasonal(
                   color="teal", alpha=0.8, edgecolor="white")
     axes2[1].axvline(8.33, color="green", linestyle="--", linewidth=1)
     axes2[1].axvline(20, color="orange", linestyle="--", linewidth=1)
-    axes2[1].set_xlabel("PCI mediano")
-    axes2[1].set_title("PCI mediano por Estado\n(↑ mayor concentración estacional)")
+    axes2[1].set_xlabel("Median PCI")
+    axes2[1].set_title("Median PCI by State\n(↑ higher seasonal concentration)")
 
     fig2.suptitle("T1.3.2 — Precipitation Concentration Index (Oliver, 1980)", fontsize=11)
     fig2.tight_layout()
     out2 = FIGURES / "dist_pci.png"
-    fig2.savefig(out2, dpi=140, bbox_inches="tight")
+    fig2.savefig(out2, dpi=900, bbox_inches="tight")
     plt.close(fig2)
 
     monthly_stats_df = pd.DataFrame(monthly_stats)
@@ -294,8 +294,8 @@ def t1_3_3_state_month_heatmap(
     Clustermap con dendrograma en ambos ejes.
     """
     mg = _monthly_groups(rain_col_map)
-    MONTH_NAMES = ["Ene","Feb","Mar","Abr","May","Jun",
-                   "Jul","Ago","Sep","Oct","Nov","Dic"]
+    MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun",
+                   "Jul","Aug","Sep","Oct","Nov","Dec"]
     states = sorted(df["State"].unique())
 
     # Matriz 32 × 12: mediana de precipitación mensual por estado
@@ -326,20 +326,20 @@ def t1_3_3_state_month_heatmap(
         metric="euclidean",
         row_cluster=True,
         col_cluster=True,
-        cbar_kws={"label": "Mediana precipitación (mm)", "shrink": 0.6},
+        cbar_kws={"label": "Median precipitation (mm)", "shrink": 0.6},
         yticklabels=True,
         xticklabels=True,
     )
-    g.ax_heatmap.set_xlabel("Mes", fontsize=10)
-    g.ax_heatmap.set_ylabel("Estado", fontsize=10)
+    g.ax_heatmap.set_xlabel("Month", fontsize=10)
+    g.ax_heatmap.set_ylabel("State", fontsize=10)
     g.fig.suptitle(
-        "T1.3.3 — Mediana de precipitación mensual por Estado × Mes\n"
-        "(clustermap Ward / euclídea)",
+        "T1.3.3 — Median monthly precipitation by State × Month\n"
+        "(clustermap Ward / Euclidean)",
         fontsize=11, y=1.01,
     )
 
     out = FIGURES / "dist_state_month_clustermap.png"
-    g.fig.savefig(out, dpi=130, bbox_inches="tight")
+    g.fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(g.fig)
     return matrix, out
 
@@ -417,32 +417,32 @@ def t1_3_4_stl_mannkendall(
 
     axes[0].plot(ts.index, ts.values, color="steelblue", linewidth=1)
     axes[0].set_ylabel("mm")
-    axes[0].set_title("Observado (mediana nacional mensual)")
+    axes[0].set_title("Observed (national monthly median)")
 
     axes[1].plot(ts.index, result.trend, color="darkred", linewidth=1.5)
-    slope_str = f"{mk_result.slope:+.3f} mm/mes"
+    slope_str = f"{mk_result.slope:+.3f} mm/month"
     p_str = f"p={mk_result.p:.3f}"
     axes[1].set_ylabel("mm")
     axes[1].set_title(
-        f"Tendencia STL — Mann-Kendall: '{mk_result.trend}', "
+        f"STL Trend — Mann-Kendall: '{mk_result.trend}', "
         f"slope={slope_str}, {p_str}"
     )
 
     axes[2].fill_between(ts.index, result.seasonal, alpha=0.7, color="darkorange")
     axes[2].set_ylabel("mm")
-    axes[2].set_title(f"Componente estacional (amplitud={stl_stats['seasonal_amplitude_mm']:.1f} mm)")
+    axes[2].set_title(f"Seasonal component (amplitude={stl_stats['seasonal_amplitude_mm']:.1f} mm)")
 
     axes[3].scatter(ts.index, result.resid, s=6, alpha=0.7, color="gray")
     axes[3].axhline(0, color="black", linewidth=0.6)
     axes[3].set_ylabel("mm")
-    axes[3].set_title(f"Residuo (σ={stl_stats['residual_std_mm']:.1f} mm)")
-    axes[3].set_xlabel("Fecha")
+    axes[3].set_title(f"Residual (σ={stl_stats['residual_std_mm']:.1f} mm)")
+    axes[3].set_xlabel("Date")
 
-    fig.suptitle("T1.3.4 — Descomposición STL de la serie nacional de precipitación",
+    fig.suptitle("T1.3.4 — STL decomposition of the national precipitation series",
                  fontsize=12, y=1.01)
     fig.tight_layout()
     out = FIGURES / "dist_stl.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return stl_stats, out
 
@@ -530,21 +530,21 @@ def t1_3_5_variogram(
     # Figura
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.scatter(lags, semivar, color="steelblue", s=50, zorder=3,
-               label="Semivariograma empírico")
+               label="Empirical semivariogram")
     ax.plot(lags_fine, model_curve, color="darkred", linewidth=2,
-            label=f"Modelo {model_name}\n{param_str}")
-    ax.set_xlabel("Distancia (grados lon/lat)")
-    ax.set_ylabel("Semivarianza (mm²)")
+            label=f"Model {model_name}\n{param_str}")
+    ax.set_xlabel("Distance (lon/lat degrees)")
+    ax.set_ylabel("Semivariance (mm²)")
     ax.set_title(
-        f"T1.3.5 — Semivariograma empírico (precipitación anual media)\n"
-        f"n={len(lons)} estaciones con pct_complete ≥ 80%"
+        f"T1.3.5 — Empirical semivariogram (mean annual precipitation)\n"
+        f"n={len(lons)} stations with pct_complete ≥ 80%"
     )
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)
 
     out = FIGURES / "dist_variogram.png"
     fig.tight_layout()
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
 
     return {

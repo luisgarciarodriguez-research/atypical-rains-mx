@@ -45,8 +45,8 @@ from scipy.stats import gmean
 
 from src.config import DATA_PROCESSED, FIGURES
 
-MONTH_NAMES = ["Ene","Feb","Mar","Abr","May","Jun",
-               "Jul","Ago","Sep","Oct","Nov","Dic"]
+MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun",
+               "Jul","Aug","Sep","Oct","Nov","Dec"]
 
 # ── T3.3.1 — CLR (Centered Log-Ratio) ────────────────────────────────────────
 
@@ -241,8 +241,8 @@ def _plot_logratio_summary(
     for i, patch in enumerate(bp["boxes"]):
         patch.set_facecolor("#FFCDD2" if i in wet else "#BBDEFB")
     axes[0, 0].axhline(0, color="grey", linestyle="--", linewidth=0.8)
-    axes[0, 0].set_title("Distribución de coordenadas CLR por mes\n"
-                          "(rojo=húmedo, azul=seco)", fontsize=10)
+    axes[0, 0].set_title("CLR coordinate distribution by month\n"
+                          "(red=wet, blue=dry)", fontsize=10)
     axes[0, 0].set_ylabel("CLR")
     axes[0, 0].tick_params(axis="x", rotation=45)
 
@@ -251,10 +251,10 @@ def _plot_logratio_summary(
         ilr_coords["ilr_1"], ilr_coords["ilr_2"],
         s=8, alpha=0.4, color="#1565C0", edgecolors="none",
     )
-    axes[0, 1].set_xlabel("ILR-1  (secos vs húmedos)", fontsize=9)
-    axes[0, 1].set_ylabel("ILR-2  (invierno vs prim.seca)", fontsize=9)
+    axes[0, 1].set_xlabel("ILR-1  (dry vs wet months)", fontsize=9)
+    axes[0, 1].set_ylabel("ILR-2  (winter vs dry spring)", fontsize=9)
     axes[0, 1].set_title(
-        f"Biplot ILR1 vs ILR2\n(N={len(ilr_coords):,} estaciones)", fontsize=10
+        f"ILR1 vs ILR2 biplot\n(N={len(ilr_coords):,} stations)", fontsize=10
     )
 
     # ── Panel 3: varianza explicada por cada coordenada ILR ──
@@ -264,16 +264,16 @@ def _plot_logratio_summary(
     cumul_var  = np.cumsum(pct_var)
     ax2        = axes[1, 0].twinx()
     axes[1, 0].bar(range(1, 12), pct_var, color="#1565C0", alpha=0.7,
-                   label="% varianza")
+                   label="% variance")
     ax2.plot(range(1, 12), cumul_var, "o-", color="#C62828",
-             linewidth=1.5, markersize=4, label="Acumulada")
+             linewidth=1.5, markersize=4, label="Cumulative")
     ax2.axhline(80, color="grey", linestyle=":", linewidth=1)
-    ax2.set_ylabel("% acumulada", fontsize=9)
-    axes[1, 0].set_xlabel("Coordenada ILR")
-    axes[1, 0].set_ylabel("% varianza", fontsize=9)
+    ax2.set_ylabel("% cumulative", fontsize=9)
+    axes[1, 0].set_xlabel("ILR coordinate")
+    axes[1, 0].set_ylabel("% variance", fontsize=9)
     axes[1, 0].set_xticks(range(1, 12))
-    axes[1, 0].set_title("Varianza por coordenada ILR\n"
-                          "(indica jerarquía de la SBP)", fontsize=10)
+    axes[1, 0].set_title("Variance by ILR coordinate\n"
+                          "(indicates SBP hierarchy)", fontsize=10)
     axes[1, 0].legend(loc="upper right", fontsize=8)
     ax2.legend(loc="center right", fontsize=8)
 
@@ -307,12 +307,12 @@ def _plot_logratio_summary(
     )
     axes[1, 1].legend(fontsize=9)
 
-    fig.suptitle("T3.3 — Transformaciones Log-Ratio (CLR e ILR)", fontsize=12)
+    fig.suptitle("T3.3 — Log-Ratio Transformations (CLR and ILR)", fontsize=12)
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "coda_logratio_transforms.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 

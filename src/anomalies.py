@@ -221,8 +221,8 @@ def _plot_capa1_summary(
         axes[0, 0].text(bar.get_x() + bar.get_width() / 2,
                         bar.get_height() + max(counts) * 0.01,
                         f"{cnt:,}", ha="center", fontsize=9)
-    axes[0, 0].set_title("Celdas flaggeadas por método (T2.1)", fontsize=10)
-    axes[0, 0].set_ylabel("N° celdas")
+    axes[0, 0].set_title("Flagged cells by method (T2.1)", fontsize=10)
+    axes[0, 0].set_ylabel("No. of cells")
 
     # Panel 2: estaciones afectadas por método
     n_st = [(flag_dfs[m].sum(axis=1) > 0).sum() for m in methods]
@@ -231,8 +231,8 @@ def _plot_capa1_summary(
                    edgecolor="white", width=0.6)
     for i, n in enumerate(n_st):
         axes[0, 1].text(i, n + 5, str(n), ha="center", fontsize=9)
-    axes[0, 1].set_title("Estaciones afectadas por método", fontsize=10)
-    axes[0, 1].set_ylabel("N° estaciones")
+    axes[0, 1].set_title("Stations affected by method", fontsize=10)
+    axes[0, 1].set_ylabel("No. of stations")
 
     # Panel 3: flags temporales del flag combinado (flags/mes)
     combined = flag_dfs.get("combined", flag_dfs[methods[0]])
@@ -245,24 +245,24 @@ def _plot_capa1_summary(
     axes[1, 0].set_xticks(list(year_ticks.keys()))
     axes[1, 0].set_xticklabels([str(y) for y in year_ticks.values()],
                                 rotation=45, fontsize=8)
-    axes[1, 0].set_title("Distribución temporal del flag Capa 1 (combinado)", fontsize=10)
-    axes[1, 0].set_ylabel("N° celdas flaggeadas")
-    axes[1, 0].set_xlabel("Mes")
+    axes[1, 0].set_title("Temporal distribution — Layer 1 flags (combined)", fontsize=10)
+    axes[1, 0].set_ylabel("No. of flagged cells")
+    axes[1, 0].set_xlabel("Month")
 
     # Panel 4: distribución por estación (n flags por estación)
     station_counts = combined.sum(axis=1)
     axes[1, 1].hist(station_counts[station_counts > 0],
                     bins=40, color="#212121", alpha=0.8, edgecolor="white")
-    axes[1, 1].set_title("Distribución de flags por estación\n(solo estaciones con ≥1 flag)", fontsize=10)
-    axes[1, 1].set_xlabel("N° de meses flaggeados por estación")
-    axes[1, 1].set_ylabel("N° estaciones")
+    axes[1, 1].set_title("Flag distribution by station\n(only stations with ≥1 flag)", fontsize=10)
+    axes[1, 1].set_xlabel("No. of flagged months per station")
+    axes[1, 1].set_ylabel("No. of stations")
 
-    fig.suptitle("T2.1 — Resumen de Capa 1: Artefactos Instrumentales", fontsize=12)
+    fig.suptitle("T2.1 — Layer 1 Summary: Instrumental Artifacts", fontsize=12)
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_capa1_summary.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -596,8 +596,8 @@ def _plot_capa2_summary(
             bar.get_height() + max(counts) * 0.01,
             f"{cnt:,}", ha="center", fontsize=8,
         )
-    axes[0, 0].set_title("Celdas flaggeadas por método (T2.2)", fontsize=10)
-    axes[0, 0].set_ylabel("N° celdas")
+    axes[0, 0].set_title("Flagged cells by method (T2.2)", fontsize=10)
+    axes[0, 0].set_ylabel("No. of cells")
     axes[0, 0].tick_params(axis="x", rotation=15)
 
     # ── Panel 2: distribución de z-scores ──
@@ -609,11 +609,11 @@ def _plot_capa2_summary(
     for thresh, ls in [(-3, "--"), (3, "--")]:
         axes[0, 1].axvline(thresh, color="red", linestyle=ls, linewidth=1.2,
                            label=f"|z|={abs(thresh)}")
-    axes[0, 1].set_xlabel("Z-score robusto")
-    axes[0, 1].set_ylabel("Densidad")
+    axes[0, 1].set_xlabel("Robust z-score")
+    axes[0, 1].set_ylabel("Density")
     axes[0, 1].set_title(
-        f"Distribución de z-scores (n={len(z_vals):,})\n"
-        f"Flaggeados |z|>3: {(np.abs(z_vals)>3).sum():,} ({(np.abs(z_vals)>3).mean():.2%})",
+        f"Z-score distribution (n={len(z_vals):,})\n"
+        f"Flagged |z|>3: {(np.abs(z_vals)>3).sum():,} ({(np.abs(z_vals)>3).mean():.2%})",
         fontsize=10,
     )
     axes[0, 1].legend(fontsize=8)
@@ -627,27 +627,27 @@ def _plot_capa2_summary(
                    color=COLORS["combined"], alpha=0.75, width=1)
     axes[1, 0].set_xticks(list(year_ticks.keys()))
     axes[1, 0].set_xticklabels(list(year_ticks.values()), rotation=45, fontsize=8)
-    axes[1, 0].set_title("Distribución temporal — flags Capa 2 combinados", fontsize=10)
-    axes[1, 0].set_ylabel("N° celdas flaggeadas")
-    axes[1, 0].set_xlabel("Mes")
+    axes[1, 0].set_title("Temporal distribution — Layer 2 flags combined", fontsize=10)
+    axes[1, 0].set_ylabel("No. of flagged cells")
+    axes[1, 0].set_xlabel("Month")
 
     # ── Panel 4: flags por estación (histograma) ──
     per_station = combined.sum(axis=1).values
     axes[1, 1].hist(per_station[per_station > 0], bins=40,
                     color=COLORS["combined"], alpha=0.8, edgecolor="white")
     axes[1, 1].set_title(
-        f"Flags por estación (solo afectadas: n={int((per_station>0).sum()):,})",
+        f"Flags per station (affected only: n={int((per_station>0).sum()):,})",
         fontsize=10,
     )
-    axes[1, 1].set_xlabel("N° meses flaggeados por estación")
-    axes[1, 1].set_ylabel("N° estaciones")
+    axes[1, 1].set_xlabel("No. of flagged months per station")
+    axes[1, 1].set_ylabel("No. of stations")
 
-    fig.suptitle("T2.2 — Resumen de Capa 2: Anomalías Univariadas Contextualizadas",
+    fig.suptitle("T2.2 — Layer 2 Summary: Contextualized Univariate Anomalies",
                  fontsize=12)
     fig.tight_layout()
 
     out = FIGURES / "anomaly_capa2_summary.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -986,8 +986,8 @@ def _plot_capa3_summary(
             bar.get_height() + max(counts) * 0.02,
             f"{cnt:,}", ha="center", fontsize=8,
         )
-    axes[0, 0].set_title("Celdas flaggeadas por método (T2.3)", fontsize=10)
-    axes[0, 0].set_ylabel("N° celdas")
+    axes[0, 0].set_title("Flagged cells by method (T2.3)", fontsize=10)
+    axes[0, 0].set_ylabel("No. of cells")
     axes[0, 0].tick_params(axis="x", rotation=15)
 
     # Panel 2: distribución temporal del combinado
@@ -999,9 +999,9 @@ def _plot_capa3_summary(
                    color=COLORS["combined"], alpha=0.75, width=1)
     axes[0, 1].set_xticks(list(year_ticks.keys()))
     axes[0, 1].set_xticklabels(list(year_ticks.values()), rotation=45, fontsize=8)
-    axes[0, 1].set_title("Distribución temporal — flags Capa 3 combinados", fontsize=10)
-    axes[0, 1].set_ylabel("N° celdas flaggeadas")
-    axes[0, 1].set_xlabel("Mes")
+    axes[0, 1].set_title("Temporal distribution — Layer 3 flags combined", fontsize=10)
+    axes[0, 1].set_ylabel("No. of flagged cells")
+    axes[0, 1].set_xlabel("Month")
 
     # Panel 3: mapa de frecuencia de flags por estación
     with warnings.catch_warnings():
@@ -1020,10 +1020,10 @@ def _plot_capa3_summary(
             df_meta.loc[~has_flag, "Lat"],
             color="lightgrey", s=3, alpha=0.4,
         )
-    plt.colorbar(sc, ax=axes[1, 0], label="N° meses flaggeados")
-    axes[1, 0].set_title("Distribución espacial de flags Capa 3", fontsize=10)
-    axes[1, 0].set_xlabel("Longitud")
-    axes[1, 0].set_ylabel("Latitud")
+    plt.colorbar(sc, ax=axes[1, 0], label="No. of flagged months")
+    axes[1, 0].set_title("Spatial distribution of Layer 3 flags", fontsize=10)
+    axes[1, 0].set_xlabel("Longitude")
+    axes[1, 0].set_ylabel("Latitude")
 
     # Panel 4: flags por mes calendario (promedio de los 13 años)
     months_cal = [rain_col_map[c][0] for c in rain_cols]
@@ -1032,21 +1032,21 @@ def _plot_capa3_summary(
         per_month_cal[m].append(int(combined[col].sum()))
     month_means = [np.mean(per_month_cal[m]) if per_month_cal[m] else 0
                    for m in range(1, 13)]
-    MONTH_NAMES = ["Ene","Feb","Mar","Abr","May","Jun",
-                   "Jul","Ago","Sep","Oct","Nov","Dic"]
+    MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun",
+                   "Jul","Aug","Sep","Oct","Nov","Dec"]
     bars2 = axes[1, 1].bar(MONTH_NAMES, month_means,
                             color=[COLORS["combined"] if m in [5,6,7,8,9,10]
                                    else "#90A4AE" for m in range(1, 13)],
                             edgecolor="white")
-    axes[1, 1].set_title("Promedio de flags por mes calendario\n(azul=seco, negro=húmedo)", fontsize=10)
-    axes[1, 1].set_ylabel("Promedio de estaciones flaggeadas")
+    axes[1, 1].set_title("Average flags by calendar month\n(blue=dry, black=wet)", fontsize=10)
+    axes[1, 1].set_ylabel("Average flagged stations")
 
-    fig.suptitle("T2.3 — Resumen de Capa 3: Anomalías Espaciales", fontsize=12)
+    fig.suptitle("T2.3 — Layer 3 Summary: Spatial Anomalies", fontsize=12)
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_capa3_summary.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -1447,8 +1447,8 @@ def _plot_capa4_summary(
             bar.get_height() + max(counts) * 0.02,
             f"{cnt:,}", ha="center", fontsize=8,
         )
-    axes[0, 0].set_title("Celdas flaggeadas por método (T2.4)", fontsize=10)
-    axes[0, 0].set_ylabel("N° celdas")
+    axes[0, 0].set_title("Flagged cells by method (T2.4)", fontsize=10)
+    axes[0, 0].set_ylabel("No. of cells")
     axes[0, 0].tick_params(axis="x", rotation=15)
 
     # Panel 2: distribución de MSE del autoencoder
@@ -1457,11 +1457,11 @@ def _plot_capa4_summary(
                     range=(0, np.percentile(mse_values, 99.5)))
     axes[0, 1].axvline(mse_threshold, color="red", linestyle="--", linewidth=1.5,
                        label=f"P95 = {mse_threshold:.4f}")
-    axes[0, 1].set_xlabel("MSE de reconstrucción (escala log1p)")
-    axes[0, 1].set_ylabel("Frecuencia")
+    axes[0, 1].set_xlabel("Reconstruction MSE (log1p scale)")
+    axes[0, 1].set_ylabel("Frequency")
     axes[0, 1].set_title(
-        f"Distribución de MSE — Autoencoder\n"
-        f"Anomalías (MSE > P95): {(mse_values > mse_threshold).sum():,} perfiles",
+        f"MSE distribution — Autoencoder\n"
+        f"Anomalies (MSE > P95): {(mse_values > mse_threshold).sum():,} profiles",
         fontsize=10,
     )
     axes[0, 1].legend(fontsize=9)
@@ -1475,9 +1475,9 @@ def _plot_capa4_summary(
                    color=COLORS["combined"], alpha=0.75, width=1)
     axes[1, 0].set_xticks(list(year_ticks.keys()))
     axes[1, 0].set_xticklabels(list(year_ticks.values()), rotation=45, fontsize=8)
-    axes[1, 0].set_title("Distribución temporal — flags Capa 4 combinados", fontsize=10)
-    axes[1, 0].set_ylabel("N° celdas flaggeadas")
-    axes[1, 0].set_xlabel("Mes")
+    axes[1, 0].set_title("Temporal distribution — Layer 4 flags combined", fontsize=10)
+    axes[1, 0].set_ylabel("No. of flagged cells")
+    axes[1, 0].set_xlabel("Month")
 
     # Panel 4: flags por estado (top-20)
     per_state = (
@@ -1489,16 +1489,16 @@ def _plot_capa4_summary(
     )
     axes[1, 1].barh(per_state.index[::-1], per_state.values[::-1],
                     color=COLORS["combined"], alpha=0.75)
-    axes[1, 1].set_title("Estaciones afectadas por estado (top-20)", fontsize=10)
-    axes[1, 1].set_xlabel("N° estaciones con ≥1 mes flaggeado")
+    axes[1, 1].set_title("Stations affected by state (top-20)", fontsize=10)
+    axes[1, 1].set_xlabel("No. of stations with ≥1 flagged month")
 
-    fig.suptitle("T2.4 — Resumen de Capa 4: Anomalías Multivariadas (Perfil Anual)",
+    fig.suptitle("T2.4 — Layer 4 Summary: Multivariate Anomalies (Annual Profile)",
                  fontsize=12)
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_capa4_summary.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 

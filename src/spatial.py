@@ -72,10 +72,10 @@ _LOCAL_110M = DATA_CATALOGS / "ne_110m_admin_0_countries.zip"
 _LOCAL_50M  = DATA_RAW / "ne_50m_admin_0_countries.zip"
 
 SEASONS = {
-    "DEF": ([12, 1, 2],  "Invierno (Dic–Feb)"),
-    "MAM": ([3, 4, 5],   "Primavera (Mar–May)"),
-    "JJA": ([6, 7, 8],   "Verano (Jun–Ago)"),
-    "SON": ([9, 10, 11], "Otoño (Sep–Nov)"),
+    "DEF": ([12, 1, 2],  "Winter (Dec–Feb)"),
+    "MAM": ([3, 4, 5],   "Spring (Mar–May)"),
+    "JJA": ([6, 7, 8],   "Summer (Jun–Aug)"),
+    "SON": ([9, 10, 11], "Autumn (Sep–Nov)"),
 }
 
 # Parámetros del variograma esférico de T1.3.5
@@ -192,7 +192,7 @@ def t1_4_1_coverage_map(df: pd.DataFrame, verbose: bool = True) -> Path:
         alpha=0.85,
         legend=True,
         legend_kwds={
-            "label": "% Completitud",
+            "label": "% Completeness",
             "orientation": "vertical",
             "shrink": 0.6,
             "pad": 0.02,
@@ -206,14 +206,14 @@ def t1_4_1_coverage_map(df: pd.DataFrame, verbose: bool = True) -> Path:
     ax.set_ylim(ymin, ymax)
     ax.set_axis_off()
     ax.set_title(
-        "T1.4.1 — Cobertura de estaciones pluviométricas\n"
-        f"n={len(gdf):,} · coloreado por % completitud (verde = completa)",
+        "T1.4.1 — Pluviometric station coverage\n"
+        f"n={len(gdf):,} · colored by % completeness (green = complete)",
         fontsize=12,
     )
 
     out = FIGURES / "map_coverage.png"
     fig.tight_layout()
-    fig.savefig(out, dpi=150, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     if verbose:
         print(f"    → {out.name}")
@@ -292,7 +292,7 @@ def t1_4_2_kriging_map(
         cmap="YlOrRd", shading="auto",
         vmin=0, vmax=np.nanpercentile(z_masked, 97),
     )
-    plt.colorbar(pcm, ax=ax, label="Precipitación anual media (mm)", shrink=0.65)
+    plt.colorbar(pcm, ax=ax, label="Mean annual precipitation (mm)", shrink=0.65)
 
     # Puntos de estaciones encima
     gdf = _stations_gdf(df[mask_complete]).to_crs(epsg=3857)
@@ -304,15 +304,15 @@ def t1_4_2_kriging_map(
     ax.set_ylim(ymin, ymax)
     ax.set_axis_off()
     ax.set_title(
-        "T1.4.2 — Precipitación anual media interpolada (Kriging Ordinario, modelo esférico)\n"
-        f"n={len(lons)} estaciones · pct_complete ≥ 80% · "
+        "T1.4.2 — Interpolated mean annual precipitation (Ordinary Kriging, spherical model)\n"
+        f"n={len(lons)} stations · pct_complete ≥ 80% · "
         f"psill={_VARIO_PARAMS['psill']:.0f} mm²  range={_VARIO_PARAMS['range']:.1f}°",
         fontsize=11,
     )
 
     out = FIGURES / "map_kriging.png"
     fig.tight_layout()
-    fig.savefig(out, dpi=150, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     if verbose:
         print(f"    → {out.name}")
@@ -393,7 +393,7 @@ def t1_4_3_seasonal_maps(
         season_median = gdf_web.loc[valid, col].median()
         ax.set_title(
             f"{label}\n"
-            f"Mediana nacional={season_median:.1f} mm  n={n_valid:,}",
+            f"National median={season_median:.1f} mm  n={n_valid:,}",
             fontsize=10,
         )
 
@@ -401,16 +401,16 @@ def t1_4_3_seasonal_maps(
     fig.subplots_adjust(right=0.88, hspace=0.06, wspace=0.02)
     cax = fig.add_axes([0.90, 0.15, 0.025, 0.70])
     cb = ColorbarBase(cax, cmap=cmap, norm=norm, orientation="vertical")
-    cb.set_label("Mediana precipitación (mm)", fontsize=10)
+    cb.set_label("Median precipitation (mm)", fontsize=10)
 
     fig.suptitle(
-        "T1.4.3 — Medianas de precipitación por trimestre\n"
-        "(escala de color común entre estaciones · gris = sin dato)",
+        "T1.4.3 — Seasonal precipitation medians by quarter\n"
+        "(common color scale across seasons · gray = no data)",
         fontsize=12, y=0.99,
     )
 
     out = FIGURES / "map_seasonal.png"
-    fig.savefig(out, dpi=150, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     if verbose:
         print(f"    → {out.name}")

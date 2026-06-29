@@ -230,13 +230,13 @@ def _plot_clustering_diagnostics(
     ax1a = axes[0, 0]
     ax1b = ax1a.twinx()
     norm_inertia = km_results["inertia"].values / km_results["inertia"].max()
-    ax1a.plot(ks, norm_inertia, "b-o", markersize=5, label="Inercia norm.")
+    ax1a.plot(ks, norm_inertia, "b-o", markersize=5, label="Inertia norm.")
     ax1b.plot(ks, km_results["silhouette"].values, "r-s", markersize=5, label="Silhouette")
     ax1a.axvline(k_opt, color="grey", linestyle="--", alpha=0.7, label=f"K*={k_opt}")
     ax1a.set_xlabel("K")
-    ax1a.set_ylabel("Inercia (norm.)", color="b")
+    ax1a.set_ylabel("Inertia (norm.)", color="b")
     ax1b.set_ylabel("Silhouette", color="r")
-    ax1a.set_title("Codo + Silhouette (K-Means)", fontsize=10)
+    ax1a.set_title("Elbow + Silhouette (K-Means)", fontsize=10)
     lines1, lab1 = ax1a.get_legend_handles_labels()
     lines2, lab2 = ax1b.get_legend_handles_labels()
     ax1a.legend(lines1 + lines2, lab1 + lab2, fontsize=8, loc="upper right")
@@ -246,7 +246,7 @@ def _plot_clustering_diagnostics(
     axes[0, 1].axvline(k_opt, color="grey", linestyle="--", alpha=0.7)
     axes[0, 1].set_xlabel("K")
     axes[0, 1].set_ylabel("Calinski-Harabász")
-    axes[0, 1].set_title("Calinski-Harabász (K-Means)\n(mayor = mejor separación)", fontsize=10)
+    axes[0, 1].set_title("Calinski-Harabász (K-Means)\n(higher = better separation)", fontsize=10)
 
     # ── Panel 3: Gap statistic ──
     ax3 = axes[0, 2]
@@ -257,7 +257,7 @@ def _plot_clustering_diagnostics(
     ax3.axvline(k_opt, color="grey", linestyle="--", alpha=0.7, label=f"K*={k_opt} (1SE)")
     ax3.set_xlabel("K")
     ax3.set_ylabel("Gap")
-    ax3.set_title("Gap Statistic (Tibshirani 2001)\n(regla 1SE)", fontsize=10)
+    ax3.set_title("Gap Statistic (Tibshirani 2001)\n(1SE rule)", fontsize=10)
     ax3.legend(fontsize=8)
 
     # ── Panel 4: GMM BIC/AIC ──
@@ -268,24 +268,24 @@ def _plot_clustering_diagnostics(
     ax4a.axvline(k_opt, color="grey", linestyle="--", alpha=0.7, label=f"K*={k_opt}")
     ax4a.axvline(k_bic, color="navy", linestyle=":", alpha=0.5, label=f"K_BIC={k_bic}")
     ax4a.set_xlabel("K")
-    ax4a.set_ylabel("Criterio")
-    ax4a.set_title("GMM — BIC y AIC\n(mínimo = mejor)", fontsize=10)
+    ax4a.set_ylabel("Criterion")
+    ax4a.set_title("GMM — BIC and AIC\n(minimum = best)", fontsize=10)
     ax4a.legend(fontsize=8)
 
     # ── Panel 5: Bootstrap Jaccard ──
     ax5 = axes[1, 1]
     ax5.hist(jaccard_iters, bins=20, color="#2E7D32", edgecolor="white", alpha=0.8)
     ax5.axvline(jaccard_mean, color="red", linestyle="--", linewidth=2,
-                label=f"Media={jaccard_mean:.3f}")
-    ax5.axvline(0.75, color="orange", linestyle=":", linewidth=1.5, label="Umbral 0.75")
-    ax5.axvline(0.60, color="red", linestyle=":", linewidth=1.5, label="Umbral 0.60")
-    estab = ("estable" if jaccard_mean > 0.75
-             else "moderado" if jaccard_mean > 0.60
-             else "inestable")
+                label=f"Mean={jaccard_mean:.3f}")
+    ax5.axvline(0.75, color="orange", linestyle=":", linewidth=1.5, label="Threshold 0.75")
+    ax5.axvline(0.60, color="red", linestyle=":", linewidth=1.5, label="Threshold 0.60")
+    estab = ("stable" if jaccard_mean > 0.75
+             else "moderate" if jaccard_mean > 0.60
+             else "unstable")
     ax5.set_xlabel("Jaccard")
-    ax5.set_ylabel("Frecuencia")
+    ax5.set_ylabel("Frequency")
     ax5.set_title(f"Bootstrap Jaccard (K={k_opt}, n=100)\n"
-                  f"Media={jaccard_mean:.3f} → {estab}", fontsize=10)
+                  f"Mean={jaccard_mean:.3f} → {estab}", fontsize=10)
     ax5.legend(fontsize=8)
 
     # ── Panel 6: Dendrograma (truncado) ──
@@ -300,15 +300,15 @@ def _plot_clustering_diagnostics(
         color_threshold=Z[-k_opt, 2],
         above_threshold_color="grey",
     )
-    ax6.set_title(f"Dendrograma jerárquico (Ward)\n(truncado en 30 hojas, K*={k_opt})",
+    ax6.set_title(f"Hierarchical dendrogram (Ward)\n(truncated at 30 leaves, K*={k_opt})",
                   fontsize=10)
-    ax6.set_ylabel("Distancia Aitchison")
+    ax6.set_ylabel("Aitchison distance")
 
-    fig.suptitle("T3.4 — Clustering en espacio ILR (Aitchison)", fontsize=12)
+    fig.suptitle("T3.4 — Clustering in ILR space (Aitchison)", fontsize=12)
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "clustering_diagnostics.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 

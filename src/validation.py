@@ -54,8 +54,8 @@ from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 from src.config import DATA_PROCESSED, FIGURES, ROOT, REPORTS
 
 REPORTS_DIR = REPORTS
-MONTH_NAMES  = ["Ene","Feb","Mar","Abr","May","Jun",
-                "Jul","Ago","Sep","Oct","Nov","Dic"]
+MONTH_NAMES  = ["Jan","Feb","Mar","Apr","May","Jun",
+                "Jul","Aug","Sep","Oct","Nov","Dec"]
 MEXICO_BBOX  = (-118.0, 14.5, -86.5, 32.8)   # lon_min, lat_min, lon_max, lat_max
 
 # ── T3.5.1 — Concordancia inter-método ───────────────────────────────────────
@@ -128,9 +128,9 @@ def plot_regime_map(
 
     ax.set_xlim(MEXICO_BBOX[0] - 0.5, MEXICO_BBOX[2] + 0.5)
     ax.set_ylim(MEXICO_BBOX[1] - 0.5, MEXICO_BBOX[3] + 0.5)
-    ax.set_xlabel("Longitud")
-    ax.set_ylabel("Latitud")
-    ax.set_title(title or f"Regímenes pluviométricos — {method.upper()} K={k}", fontsize=11)
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.set_title(title or f"Pluviometric regimes — {method.upper()} K={k}", fontsize=11)
     ax.legend(
         markerscale=1.5, fontsize=7, ncol=4,
         loc="lower left", framealpha=0.7, title="Cluster",
@@ -143,7 +143,7 @@ def plot_all_maps(df: pd.DataFrame, k: int = 14) -> Path:
     from pathlib import Path
     fig, axes = plt.subplots(1, 3, figsize=(21, 7))
     methods = ["kmeans", "hierarchical", "gmm"]
-    names   = ["K-Means", "Jerárquico (Ward)", "GMM"]
+    names   = ["K-Means", "Hierarchical (Ward)", "GMM"]
 
     try:
         mexico = _load_mexico_outline()
@@ -169,13 +169,13 @@ def plot_all_maps(df: pd.DataFrame, k: int = 14) -> Path:
         ax.set_xlim(MEXICO_BBOX[0] - 0.5, MEXICO_BBOX[2] + 0.5)
         ax.set_ylim(MEXICO_BBOX[1] - 0.5, MEXICO_BBOX[3] + 0.5)
         ax.set_title(name, fontsize=10)
-        ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud")
+        ax.set_xlabel("Longitude"); ax.set_ylabel("Latitude")
 
-    fig.suptitle(f"Comparación de regímenes pluviométricos (K={k})", fontsize=12)
+    fig.suptitle(f"Comparison of pluviometric regimes (K={k})", fontsize=12)
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "regime_maps.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -232,12 +232,12 @@ def plot_compositional_profiles(
     for i in range(k, len(axes)):
         axes[i].set_visible(False)
 
-    fig.suptitle(f"Perfiles composicionales por cluster — {method.upper()} K={k}\n"
-                 "(media mensual de proporción anual, banda = Q25–Q75)", fontsize=11)
+    fig.suptitle(f"Compositional profiles by cluster — {method.upper()} K={k}\n"
+                 "(monthly mean of annual proportion, band = Q25–Q75)", fontsize=11)
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / f"cluster_profiles_{method}.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -395,11 +395,11 @@ def plot_concordance(ari_mat: pd.DataFrame, nmi_mat: pd.DataFrame) -> Path:
                         fontsize=10, color="black")
         ax.set_title(title, fontsize=11)
         plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    fig.suptitle("Concordancia inter-método (K=14)", fontsize=11)
+    fig.suptitle("Inter-method concordance (K=14)", fontsize=11)
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "method_concordance.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 

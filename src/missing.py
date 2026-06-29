@@ -79,20 +79,20 @@ def plot_datos_faltantes_matrix(df: pd.DataFrame, rain_cols: list, rain_col_map:
     }
     ax.set_xticks(list(year_ticks.keys()))
     ax.set_xticklabels(list(year_ticks.values()), rotation=45, fontsize=8)
-    ax.set_xlabel("Año (posición de enero)", fontsize=9)
+    ax.set_xlabel("Year (position of January)", fontsize=9)
     ax.set_ylabel(
-        f"Estaciones (n={len(df_sorted):,}) — ordenadas por Estado / % completitud ↓",
+        f"Stations (n={len(df_sorted):,}) — ordered by State / % completeness ↓",
         fontsize=8,
     )
     ax.set_title(
-        "Datos faltantes por estación × mes (blanco = NaN)\n"
-        "Orden: Estado (A→Z) · pct_complete (↓)",
+        "Missing data by station × month (white = NaN)\n"
+        "Order: State (A→Z) · pct_complete (↓)",
         fontsize=11,
     )
 
     fig.tight_layout()
     out = FIGURES / "missing_matrix.png"
-    fig.savefig(out, dpi=130, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -124,14 +124,14 @@ def plot_missing_by_state_year(
     ax, cax = axes
 
     im = ax.imshow(vals, aspect="auto", cmap="RdYlGn_r", vmin=0, vmax=1)
-    fig.colorbar(im, cax=cax, label="Proporción faltantes")
+    fig.colorbar(im, cax=cax, label="Missing proportion")
 
     ax.set_xticks(range(len(years)))
     ax.set_xticklabels([str(y) for y in years], rotation=45, fontsize=8)
     ax.set_yticks(range(len(states)))
     ax.set_yticklabels(states, fontsize=7)
     ax.set_title(
-        "Proporción de datos faltantes por Estado × Año\n(rojo = alta, verde = baja)",
+        "Missing data proportion by State × Year\n(red = high, green = low)",
         fontsize=11,
     )
 
@@ -149,7 +149,7 @@ def plot_missing_by_state_year(
 
     fig.tight_layout()
     out = FIGURES / "missing_by_state_year.png"
-    fig.savefig(out, dpi=130, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -331,7 +331,7 @@ def plot_biserial_correlations(
     THRESH = 0.10  # umbral de relevancia práctica
 
     for ax_idx, (meta_var, ylabel) in enumerate(
-        [("Lat", "r (Latitud)"), ("Long", "r (Longitud)")]
+        [("Lat", "r (Latitude)"), ("Long", "r (Longitude)")]
     ):
         col_dict = corr_results.get(meta_var, {})
         rs = [col_dict.get(c, {}).get("r", np.nan) for c in rain_cols]
@@ -349,8 +349,8 @@ def plot_biserial_correlations(
         axes[ax_idx].set_ylim(-0.6, 0.6)
 
     axes[0].set_title(
-        "Correlaciones punto-biserial: datos faltantes ~ contexto\n"
-        "(rojo = |r| > 0.10; línea punteada = umbral de relevancia)",
+        "Point-biserial correlations: missing data ~ context\n"
+        "(red = |r| > 0.10; dashed line = relevance threshold)",
         fontsize=11,
     )
 
@@ -364,7 +364,7 @@ def plot_biserial_correlations(
         axes[2].fill_between(x, 0, rates, alpha=0.25, color="darkorange")
         axes[2].axhline(np.nanmean(rates), color="navy", linestyle=":", linewidth=1,
                         label=f"Media = {np.nanmean(rates):.1%}")
-        axes[2].set_ylabel("Tasa de faltantes", fontsize=9)
+        axes[2].set_ylabel("Missing rate", fontsize=9)
         axes[2].set_ylim(0, 1)
         axes[2].legend(fontsize=8)
 
@@ -377,11 +377,11 @@ def plot_biserial_correlations(
     for ax in axes:
         ax.set_xticks([t[0] for t in year_ticks])
         ax.set_xticklabels([str(t[1]) for t in year_ticks], fontsize=8, rotation=45)
-    axes[2].set_xlabel("Período (posición del enero de cada año)", fontsize=9)
+    axes[2].set_xlabel("Period (position of January each year)", fontsize=9)
 
     fig.tight_layout()
     out = FIGURES / "missing_biserial.png"
-    fig.savefig(out, dpi=130, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -496,8 +496,8 @@ def plot_dropout_analysis(dropout_df: pd.DataFrame, rain_cols: list) -> Path:
     )
     bar_colors = [COLORS[p] for p in counts.index]
     bars = axes[0].bar(counts.index, counts.values, color=bar_colors, edgecolor="white", width=0.6)
-    axes[0].set_title("Clasificación de patrones de dropout", fontsize=10)
-    axes[0].set_ylabel("N° estaciones")
+    axes[0].set_title("Dropout pattern classification", fontsize=10)
+    axes[0].set_ylabel("No. of stations")
     for bar, cnt in zip(bars, counts.values):
         axes[0].text(
             bar.get_x() + bar.get_width() / 2,
@@ -516,9 +516,9 @@ def plot_dropout_analysis(dropout_df: pd.DataFrame, rain_cols: list) -> Path:
     axes[1].hist(
         n_blocks, bins=range(0, 26), color="steelblue", edgecolor="white", alpha=0.85
     )
-    axes[1].set_title("N° de bloques contiguos de NaN\n(estaciones con datos parciales)", fontsize=10)
-    axes[1].set_xlabel("Bloques NaN por estación")
-    axes[1].set_ylabel("N° estaciones")
+    axes[1].set_title("No. of contiguous NaN blocks\n(stations with partial data)", fontsize=10)
+    axes[1].set_xlabel("NaN blocks per station")
+    axes[1].set_ylabel("No. of stations")
 
     # — Panel 3: bloque más largo vs completitud, coloreado por patrón —
     for pat in ("monotonic", "intermittent"):
@@ -528,18 +528,18 @@ def plot_dropout_analysis(dropout_df: pd.DataFrame, rain_cols: list) -> Path:
             dropout_df.loc[mask, "longest_nan_block"],
             c=COLORS[pat], alpha=0.4, s=10, label=pat,
         )
-    axes[2].set_xlabel("% Completitud")
-    axes[2].set_ylabel("Longitud del bloque NaN más largo (meses)")
-    axes[2].set_title("Bloque NaN máximo vs completitud", fontsize=10)
-    axes[2].axhline(12, color="gray", linestyle=":", linewidth=0.8, label="1 año")
-    axes[2].axhline(24, color="gray", linestyle="--", linewidth=0.8, label="2 años")
+    axes[2].set_xlabel("% Completeness")
+    axes[2].set_ylabel("Length of longest NaN block (months)")
+    axes[2].set_title("Maximum NaN block vs completeness", fontsize=10)
+    axes[2].axhline(12, color="gray", linestyle=":", linewidth=0.8, label="1 year")
+    axes[2].axhline(24, color="gray", linestyle="--", linewidth=0.8, label="2 years")
     axes[2].legend(fontsize=8)
 
-    fig.suptitle("Análisis de Patrones Temporales de Dropout — T1.2.4", fontsize=12)
+    fig.suptitle("Temporal Dropout Pattern Analysis — T1.2.4", fontsize=12)
     fig.tight_layout()
 
     out = FIGURES / "missing_dropout.png"
-    fig.savefig(out, dpi=130, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -571,10 +571,10 @@ def plot_dropout_temporal_map(
 
     if len(last_valid_dates) > 0:
         axes[0].hist(last_valid_dates, bins=30, color="#e74c3c", alpha=0.8, edgecolor="white")
-        axes[0].set_xlabel("Año de último reporte")
-        axes[0].set_ylabel("N° estaciones")
+        axes[0].set_xlabel("Year of last report")
+        axes[0].set_ylabel("No. of stations")
         axes[0].set_title(
-            f"Estaciones monotónicas (n={len(mono):,})\n¿Cuándo dejaron de reportar?",
+            f"Monotonic stations (n={len(mono):,})\nWhen did they stop reporting?",
             fontsize=10,
         )
     else:
@@ -585,18 +585,18 @@ def plot_dropout_temporal_map(
             inter["longest_nan_block"].clip(0, 80),
             bins=30, color="#f39c12", alpha=0.8, edgecolor="white",
         )
-        axes[1].set_xlabel("Longitud del bloque NaN más largo (meses)")
-        axes[1].set_ylabel("N° estaciones")
+        axes[1].set_xlabel("Length of longest NaN block (months)")
+        axes[1].set_ylabel("No. of stations")
         axes[1].set_title(
-            f"Estaciones intermitentes (n={len(inter):,})\nDistribución del gap más largo",
+            f"Intermittent stations (n={len(inter):,})\nDistribution of longest gap",
             fontsize=10,
         )
 
-    fig.suptitle("Comportamiento temporal del dropout", fontsize=11)
+    fig.suptitle("Temporal dropout behavior", fontsize=11)
     fig.tight_layout()
 
     out = FIGURES / "missing_dropout_temporal.png"
-    fig.savefig(out, dpi=130, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 

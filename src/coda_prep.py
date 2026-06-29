@@ -176,8 +176,8 @@ def _plot_subset_summary(
     for bar, n in zip(bars, sizes[::-1]):
         axes[0, 0].text(bar.get_width() + max(sizes) * 0.01, bar.get_y() + bar.get_height() / 2,
                         f"{n:,}", va="center", fontsize=9)
-    axes[0, 0].set_title("Embudo de selección del subconjunto CoDA", fontsize=10)
-    axes[0, 0].set_xlabel("N° estaciones")
+    axes[0, 0].set_title("CoDA subset selection funnel", fontsize=10)
+    axes[0, 0].set_xlabel("No. of stations")
     axes[0, 0].set_xlim(0, max(sizes) * 1.15)
 
     # ── Panel 2: distribución de % completitud en el subconjunto ──
@@ -186,26 +186,26 @@ def _plot_subset_summary(
     axes[0, 1].axvline(pct.median(), color="red", linestyle="--",
                        label=f"Mediana={pct.median():.1f}%")
     axes[0, 1].set_title(
-        f"Completitud de la serie temporal\n(subconjunto CoDA: {len(df_coda):,} estaciones)",
+        f"Temporal series completeness\n(CoDA subset: {len(df_coda):,} stations)",
         fontsize=10,
     )
-    axes[0, 1].set_xlabel("% meses con dato válido")
-    axes[0, 1].set_ylabel("N° estaciones")
+    axes[0, 1].set_xlabel("% months with valid data")
+    axes[0, 1].set_ylabel("No. of stations")
     axes[0, 1].legend(fontsize=9)
 
     # ── Panel 3: mapa — incluidas vs excluidas ──
     included = df_orig.index.isin(df_coda.index)
     axes[1, 0].scatter(
         df_orig.loc[~included, "Long"], df_orig.loc[~included, "Lat"],
-        color="#BDBDBD", s=5, alpha=0.5, label="Excluidas",
+        color="#BDBDBD", s=5, alpha=0.5, label="Excluded",
     )
     axes[1, 0].scatter(
         df_coda["Long"], df_coda["Lat"],
-        color="#1565C0", s=8, alpha=0.7, label=f"Incluidas ({len(df_coda):,})",
+        color="#1565C0", s=8, alpha=0.7, label=f"Included ({len(df_coda):,})",
     )
-    axes[1, 0].set_title("Distribución espacial del subconjunto CoDA", fontsize=10)
-    axes[1, 0].set_xlabel("Longitud")
-    axes[1, 0].set_ylabel("Latitud")
+    axes[1, 0].set_title("Spatial distribution of CoDA subset", fontsize=10)
+    axes[1, 0].set_xlabel("Longitude")
+    axes[1, 0].set_ylabel("Latitude")
     axes[1, 0].legend(fontsize=8, markerscale=2)
 
     # ── Panel 4: años calificantes por estación ──
@@ -220,18 +220,18 @@ def _plot_subset_summary(
     axes[1, 1].hist(qy_vals, bins=range(0, len(years) + 2), color="#1565C0",
                     alpha=0.8, edgecolor="white", align="left")
     axes[1, 1].axvline(3, color="red", linestyle="--", linewidth=1.2,
-                       label="umbral mín. (3 años)")
-    axes[1, 1].set_title("Años calificantes (≥10 meses/año) por estación", fontsize=10)
-    axes[1, 1].set_xlabel("N° años con ≥10 meses válidos")
-    axes[1, 1].set_ylabel("N° estaciones")
+                       label="min. threshold (3 years)")
+    axes[1, 1].set_title("Qualifying years (≥10 months/year) per station", fontsize=10)
+    axes[1, 1].set_xlabel("No. of years with ≥10 valid months")
+    axes[1, 1].set_ylabel("No. of stations")
     axes[1, 1].legend(fontsize=9)
 
-    fig.suptitle("T3.1 — Selección del Subconjunto Analítico para CoDA", fontsize=12)
+    fig.suptitle("T3.1 — Analytical Subset Selection for CoDA", fontsize=12)
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "coda_subset_selection.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -359,8 +359,8 @@ def run_t3_1(
 # T3.2 — TRATAMIENTO DE CEROS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-MONTH_NAMES = ["Ene","Feb","Mar","Abr","May","Jun",
-               "Jul","Ago","Sep","Oct","Nov","Dic"]
+MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun",
+               "Jul","Aug","Sep","Oct","Nov","Dec"]
 
 
 # ── T3.2.1 — Composiciones brutas ─────────────────────────────────────────────
@@ -532,13 +532,13 @@ def _plot_zero_treatment(
     axes[0, 0].bar(MONTH_NAMES, [zero_by_month.get(m, 0) for m in range(1, 13)],
                    color=bar_colors, edgecolor="white")
     axes[0, 0].set_title(
-        f"Ceros en composiciones brutas por mes\n"
-        f"Total: {diag['total_zeros']} celdas en {diag['stations_with_zeros']} estaciones "
+        f"Zeros in raw compositions by month\n"
+        f"Total: {diag['total_zeros']} cells in {diag['stations_with_zeros']} stations "
         f"({diag['pct_cells_zero']:.2f}%)",
         fontsize=10,
     )
-    axes[0, 0].set_ylabel("N° estaciones con cero")
-    axes[0, 0].set_xlabel("Mes (rojo=húmedo, azul=seco)")
+    axes[0, 0].set_ylabel("No. of stations with zero")
+    axes[0, 0].set_xlabel("Month (red=wet, blue=dry)")
 
     # ── Panel 2: distribución de composiciones antes / después (mes con más ceros = abril) ──
     ref_month = max(diag["zeros_per_month"], key=lambda m: diag["zeros_per_month"][m])
@@ -546,12 +546,12 @@ def _plot_zero_treatment(
     mult_vals = comp_mult[ref_month].values
     valid_raw  = raw_vals[~np.isnan(raw_vals) & (raw_vals > 0)]
     valid_mult = mult_vals[mult_vals > 0]
-    axes[0, 1].hist(valid_raw,  bins=40, alpha=0.5, color="#1976D2", label="Bruta (sin ceros)")
-    axes[0, 1].hist(valid_mult, bins=40, alpha=0.5, color="#E53935", label="Post-reemplazo mult.")
-    axes[0, 1].set_title(f"Distribución de composición — mes {MONTH_NAMES[ref_month-1]} "
-                          f"(mes con más ceros)", fontsize=10)
-    axes[0, 1].set_xlabel("Proporción")
-    axes[0, 1].set_ylabel("N° estaciones")
+    axes[0, 1].hist(valid_raw,  bins=40, alpha=0.5, color="#1976D2", label="Raw (without zeros)")
+    axes[0, 1].hist(valid_mult, bins=40, alpha=0.5, color="#E53935", label="Post-multiplicative replacement")
+    axes[0, 1].set_title(f"Composition distribution — {MONTH_NAMES[ref_month-1]} "
+                          f"(month with most zeros)", fontsize=10)
+    axes[0, 1].set_xlabel("Proportion")
+    axes[0, 1].set_ylabel("No. of stations")
     axes[0, 1].legend(fontsize=8)
 
     # ── Panel 3: análisis de sensibilidad (mult vs Bayesiano) ──
@@ -559,43 +559,43 @@ def _plot_zero_treatment(
         axes[1, 0].scatter(sensitivity["n_zeros"], sensitivity["max_diff"],
                            c=sensitivity["euclidean_dist"], cmap="YlOrRd",
                            s=30, alpha=0.7, edgecolors="none")
-        axes[1, 0].set_xlabel("N° ceros en la composición")
-        axes[1, 0].set_ylabel("Máx. diferencia absoluta |mult − Bayesiano|")
+        axes[1, 0].set_xlabel("No. of zeros in composition")
+        axes[1, 0].set_ylabel("Max. absolute difference |mult − Bayesian|")
         axes[1, 0].set_title(
-            "Sensibilidad: Reemplazo Mult. vs Bayesiano-Laplace\n"
-            f"(estaciones con ceros: {len(sensitivity)})",
+            "Sensitivity: Multiplicative vs Bayesian-Laplace replacement\n"
+            f"(stations with zeros: {len(sensitivity)})",
             fontsize=10,
         )
         sm = plt.cm.ScalarMappable(cmap="YlOrRd")
         sm.set_array(sensitivity["euclidean_dist"].values)
-        plt.colorbar(sm, ax=axes[1, 0], label="Dist. euclidiana")
+        plt.colorbar(sm, ax=axes[1, 0], label="Euclidean dist.")
 
     # ── Panel 4: mediana de composición por mes (antes y después) ──
     medians_raw  = [compositions_raw[m].median() for m in range(1, 13)]
     medians_mult = [comp_mult[m].median()        for m in range(1, 13)]
     x = np.arange(12)
     w = 0.35
-    axes[1, 1].bar(x - w/2, medians_raw,  width=w, label="Bruta",
+    axes[1, 1].bar(x - w/2, medians_raw,  width=w, label="Raw",
                    color="#1976D2", alpha=0.7, edgecolor="white")
-    axes[1, 1].bar(x + w/2, medians_mult, width=w, label="Post-reemplazo mult.",
+    axes[1, 1].bar(x + w/2, medians_mult, width=w, label="Post-multiplicative replacement",
                    color="#E53935", alpha=0.7, edgecolor="white")
     axes[1, 1].set_xticks(x)
     axes[1, 1].set_xticklabels(MONTH_NAMES, fontsize=8)
     axes[1, 1].axhline(1/12, color="grey", linestyle=":", linewidth=1,
-                       label="Composición uniforme (1/12)")
+                       label="Uniform composition (1/12)")
     axes[1, 1].set_title(
-        "Mediana de composición por mes\n(Bruta vs Reemplazo multiplicativo)",
+        "Median composition by month\n(Raw vs Multiplicative replacement)",
         fontsize=10,
     )
-    axes[1, 1].set_ylabel("Proporción mediana")
+    axes[1, 1].set_ylabel("Median proportion")
     axes[1, 1].legend(fontsize=8)
 
-    fig.suptitle("T3.2 — Tratamiento de Ceros en Composiciones Pluviométricas", fontsize=12)
+    fig.suptitle("T3.2 — Zero Treatment in Pluviometric Compositions", fontsize=12)
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "coda_zero_treatment.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 

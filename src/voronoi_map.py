@@ -50,7 +50,7 @@ OUTPUT_FIG = FIGURES / "mapa_voronoi_k28.png"
 
 # ── Constantes ─────────────────────────────────────────────────────────────────
 K = 28
-DPI = 140
+DPI = 900
 _BBOX = (
     MEXICO_BBOX["lon_min"],
     MEXICO_BBOX["lat_min"],

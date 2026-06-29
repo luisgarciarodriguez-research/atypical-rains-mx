@@ -214,21 +214,21 @@ def _plot_station_coverage(df, out_bbox_mask):
     outside = out_bbox_mask & df["Long"].notna()
 
     ax.scatter(df.loc[inside, "Long"], df.loc[inside, "Lat"],
-               c="steelblue", s=8, alpha=0.6, label="Dentro del bbox")
+               c="steelblue", s=8, alpha=0.6, label="Within bbox")
     if outside.sum() > 0:
         ax.scatter(df.loc[outside, "Long"], df.loc[outside, "Lat"],
-                   c="red", s=20, alpha=0.9, label="Fuera del bbox")
+                   c="red", s=20, alpha=0.9, label="Outside bbox")
 
     ax.set_xlim(MEXICO_BBOX["lon_min"] - 2, MEXICO_BBOX["lon_max"] + 2)
     ax.set_ylim(MEXICO_BBOX["lat_min"] - 2, MEXICO_BBOX["lat_max"] + 2)
-    ax.set_xlabel("Longitud")
-    ax.set_ylabel("Latitud")
-    ax.set_title("Cobertura de estaciones pluviométricas (T1.1.3)")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.set_title("Pluviometric station coverage (T1.1.3)")
     ax.legend(loc="lower left")
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "T1.1.3_station_coverage.png"
-    fig.savefig(out, dpi=150, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     print(f"         Mapa guardado en: {out}")
 

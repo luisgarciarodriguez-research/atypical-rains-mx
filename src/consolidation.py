@@ -224,11 +224,11 @@ def _plot_consolidation_summary(
     layer_counts = {
         k: int((stacked.values == k).sum()) for k in range(5)
     }
-    labels = [f"0 capas\n({layer_counts[0]:,})",
-              f"1 capa\n({layer_counts[1]:,})",
-              f"2 capas\n({layer_counts[2]:,})",
-              f"3 capas\n({layer_counts[3]:,})",
-              f"4 capas\n({layer_counts[4]:,})"]
+    labels = [f"0 layers\n({layer_counts[0]:,})",
+              f"1 layer\n({layer_counts[1]:,})",
+              f"2 layers\n({layer_counts[2]:,})",
+              f"3 layers\n({layer_counts[3]:,})",
+              f"4 layers\n({layer_counts[4]:,})"]
     bar_colors = ["#CFD8DC", "#B0BEC5", "#EF9A9A", "#E53935", "#B71C1C"]
     bars = axes[0, 0].bar(labels, list(layer_counts.values()),
                            color=bar_colors, edgecolor="white", width=0.6)
@@ -240,11 +240,11 @@ def _plot_consolidation_summary(
                 f"{cnt:,}", ha="center", fontsize=8,
             )
     axes[0, 0].axvline(1.5, color="red", linestyle="--", linewidth=1.2,
-                       label="umbral confirmación (≥2)")
+                       label="confirmation threshold (≥2)")
     axes[0, 0].set_title(
-        f"Pirámide de consenso multi-capa\nκ de Fleiss = {kappa:.4f}", fontsize=10
+        f"Multi-layer consensus pyramid\nFleiss κ = {kappa:.4f}", fontsize=10
     )
-    axes[0, 0].set_ylabel("N° celdas")
+    axes[0, 0].set_ylabel("No. of cells")
     axes[0, 0].legend(fontsize=8)
 
     # ── Panel 2: distribución de clasificaciones ──
@@ -262,10 +262,10 @@ def _plot_consolidation_summary(
                 f"{cnt:,}", ha="center", fontsize=8,
             )
         axes[0, 1].set_title(
-            f"Clasificación de anomalías confirmadas\n(total: {len(catalog):,})",
+            f"Confirmed anomaly classification\n(total: {len(catalog):,})",
             fontsize=10,
         )
-        axes[0, 1].set_ylabel("N° anomalías")
+        axes[0, 1].set_ylabel("No. of anomalies")
         axes[0, 1].tick_params(axis="x", rotation=15)
 
     # ── Panel 3: distribución temporal de confirmadas ──
@@ -277,10 +277,10 @@ def _plot_consolidation_summary(
                    color="#C62828", alpha=0.8, width=1)
     axes[1, 0].set_xticks(list(year_ticks.keys()))
     axes[1, 0].set_xticklabels(list(year_ticks.values()), rotation=45, fontsize=8)
-    axes[1, 0].set_title("Distribución temporal — anomalías confirmadas (≥2 capas)",
+    axes[1, 0].set_title("Temporal distribution — confirmed anomalies (≥2 layers)",
                           fontsize=10)
-    axes[1, 0].set_ylabel("N° celdas confirmadas")
-    axes[1, 0].set_xlabel("Mes")
+    axes[1, 0].set_ylabel("No. of confirmed cells")
+    axes[1, 0].set_xlabel("Month")
 
     # ── Panel 4: mapa de anomalías confirmadas por estación ──
     if not catalog.empty:
@@ -299,22 +299,22 @@ def _plot_consolidation_summary(
             df_meta.loc[~has_flag, "Lat"],
             color="lightgrey", s=3, alpha=0.35,
         )
-        plt.colorbar(sc, ax=axes[1, 1], label="N° anomalías confirmadas")
-        axes[1, 1].set_title("Distribución espacial de anomalías confirmadas",
+        plt.colorbar(sc, ax=axes[1, 1], label="No. of confirmed anomalies")
+        axes[1, 1].set_title("Spatial distribution of confirmed anomalies",
                               fontsize=10)
-        axes[1, 1].set_xlabel("Longitud")
-        axes[1, 1].set_ylabel("Latitud")
+        axes[1, 1].set_xlabel("Longitude")
+        axes[1, 1].set_ylabel("Latitude")
 
     fig.suptitle(
-        "T2.5 — Consolidación del Catálogo de Anomalías "
-        f"(κ Fleiss = {kappa:.4f})",
+        "T2.5 — Anomaly Catalog Consolidation "
+        f"(Fleiss κ = {kappa:.4f})",
         fontsize=12,
     )
     fig.tight_layout()
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_consolidation_summary.png"
-    fig.savefig(out, dpi=140, bbox_inches="tight")
+    fig.savefig(out, dpi=900, bbox_inches="tight")
     plt.close(fig)
     return out
 
