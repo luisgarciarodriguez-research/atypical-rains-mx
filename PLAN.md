@@ -4,7 +4,7 @@
 >
 > **Dataset**: `data/raw/stats_lluvia_2013_2026_datos_flt.csv`
 >
-> **Última actualización**: 2026-06-24
+> **Última actualización**: 2026-06-29
 
 ---
 
@@ -30,17 +30,23 @@ atypical_rains_mx/
 │   ├── 01_eda.ipynb                 # Fase I completa
 │   ├── 02_anomalias.ipynb           # Fase II completa
 │   └── 03_coda_clustering.ipynb     # Fase III completa
+├── run_all.sh                       # ejecuta el pipeline completo T1–T3.5
 ├── src/
 │   ├── __init__.py
 │   ├── config.py                    # constantes, paths, seeds
-│   ├── loading.py                   # carga y limpieza inicial
-│   ├── missing.py                   # diagnóstico de faltantes
-│   ├── distributions.py             # análisis distributivo
-│   ├── spatial.py                   # geoespacial + kriging
-│   ├── anomalies.py                 # capas 1–4 de detección
-│   ├── compositional.py             # transformaciones CoDA
-│   ├── clustering.py                # K-Means, jerárquico, GMM
-│   └── visualization.py             # funciones de plotting
+│   ├── loading.py                   # T1.1 — carga y limpieza inicial
+│   ├── missing.py                   # T1.2 — diagnóstico de faltantes
+│   ├── distributions.py             # T1.3 — análisis distributivo
+│   ├── spatial.py                   # T1.4 — geoespacial + kriging
+│   ├── anomalies.py                 # T2.1–T2.4 — capas de detección
+│   ├── consolidation.py             # T2.5 — consenso multi-capa
+│   ├── coda_prep.py                 # T3.1–T3.2 — selección y ceros CoDA
+│   ├── compositional.py             # T3.3 — transformaciones log-ratio
+│   ├── clustering.py                # T3.4 — K-Means, jerárquico, GMM
+│   ├── validation.py                # T3.5 — validación e interpretación
+│   ├── voronoi_map.py               # mapa de teselación de Voronoi (k=28)
+│   ├── report.py                    # generación de reporte PDF
+│   └── slides.py                    # generación de presentación PPTX
 ├── outputs/
 │   ├── figures/                     # gráficas exportadas
 │   └── reports/                     # reportes generados
@@ -1072,6 +1078,51 @@ for task, path in checks.items():
     status = '✓' if p.exists() and p.stat().st_size > 0 else '✗'
     print(f'  {status} {task}: {path}')
 "
+```
+
+---
+
+## Solicitudes Adicionales (actualizaciones post-implementación)
+
+### 2026-06-29 — Preparación para publicación en revista científica
+
+#### A. Traducción de etiquetas de figuras al inglés
+
+Todos los módulos que generan figuras fueron actualizados para reemplazar
+cualquier texto visible en español (títulos, etiquetas de ejes, leyendas,
+anotaciones de colorbar) por su equivalente en inglés, en cumplimiento
+de los requisitos de la revista destino.
+
+Módulos modificados:
+
+| Módulo | Figuras de salida |
+|---|---|
+| `src/loading.py` | `T1.1.3_station_coverage.png` |
+| `src/missing.py` | `missing_matrix.png`, `missing_by_state_year.png`, `missing_biserial.png`, `missing_dropout.png`, `missing_dropout_temporal.png` |
+| `src/distributions.py` | `dist_histogram.png`, `dist_seasonal_boxplot.png`, `dist_pci.png`, `dist_state_month_clustermap.png`, `dist_stl.png`, `dist_variogram.png` |
+| `src/spatial.py` | `map_coverage.png`, `map_kriging.png`, `map_seasonal.png` |
+| `src/anomalies.py` | `anomaly_capa1_summary.png`, `anomaly_capa2_summary.png`, `anomaly_capa3_summary.png`, `anomaly_capa4_summary.png` |
+| `src/consolidation.py` | `anomaly_consolidation_summary.png` |
+| `src/coda_prep.py` | `coda_subset_selection.png`, `coda_zero_treatment.png` |
+| `src/compositional.py` | `coda_logratio_transforms.png` |
+| `src/clustering.py` | `clustering_diagnostics.png` |
+| `src/validation.py` | `method_concordance.png`, `regime_maps.png`, `cluster_profiles_kmeans.png` |
+| `src/voronoi_map.py` | `mapa_voronoi_k28.png` |
+
+#### B. Actualización de resolución de figuras a 900 DPI
+
+Todas las llamadas a `fig.savefig()` fueron actualizadas de los valores
+originales (130, 140 o 150 DPI) a **900 DPI**, cumpliendo el estándar
+mínimo requerido para figuras de revista en formato impreso.
+
+#### C. Script de ejecución del pipeline
+
+Se añadió `run_all.sh` en la raíz del proyecto. Ejecuta el pipeline
+completo T1–T3.5 en orden de dependencias mediante `conda run -n lluvia`,
+sin requerir activación previa del entorno:
+
+```bash
+./run_all.sh
 ```
 
 ---

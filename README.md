@@ -101,7 +101,42 @@ composicional (Fases T1–T3.5) está **completamente implementado y verificado*
 | **T3.4** Clustering | **K\*=14 regímenes** · K-Means + Ward + GMM · Bootstrap Jaccard ≥ 0.75 |
 | **T3.5** Validación | ARI/NMI inter-método · mapas de régimen · etiquetas climatológicas |
 
-**Código fuente**: 7,806 líneas en `src/` · 27 figuras generadas · pipeline ejecutable en ~120 s
+**Código fuente**: 7,806 líneas en `src/` · 27 figuras generadas · pipeline ejecutable en ~120 s  
+**Estándar de publicación**: etiquetas y títulos de figuras en inglés · resolución 900 DPI
+
+---
+
+## Figuras representativas
+
+### Regímenes pluviométricos — Teselación de Voronoi (K=28)
+Cada celda representa el área de influencia de una estación, coloreada por
+su cluster de régimen pluviométrico composicional (K-Means en espacio ILR, k=28).
+
+![Mapa de Voronoi k=28](docs/assets/voronoi_k28.png)
+
+### Cobertura de la red de estaciones pluviométricas
+Distribución espacial de las 1,959 estaciones del SMN coloreadas por porcentaje
+de completitud (verde = alta, rojo = baja).
+
+![Cobertura de estaciones](docs/assets/map_coverage.png)
+
+### Diagnóstico de clustering composicional
+Panel de diagnóstico para la selección de K óptimo: inercia normalizada,
+coeficiente de Silhouette, BIC/AIC del GMM y estabilidad Jaccard por bootstrap.
+
+![Diagnóstico de clustering](docs/assets/clustering_diagnostics.png)
+
+### Consolidación multi-capa de anomalías (T2.5)
+Resumen del consenso entre las cuatro capas de detección (artefactos instrumentales,
+outliers univariados, anomalías espaciales y perfiles multivariados).
+
+![Consolidación de anomalías](docs/assets/consolidation_summary.png)
+
+### Proporción de datos faltantes por Estado × Año (T1.2)
+Heatmap de la tasa de datos faltantes para cada estado y año del período 2013–2026.
+Permite identificar patrones estructurales de dropout (operativo, instrumental o regional).
+
+![Datos faltantes por Estado × Año](docs/assets/missing_by_state_year.png)
 
 ---
 
@@ -164,6 +199,7 @@ como datos de prueba completamente no vistos. Nunca mezclar 2025 en el entrenami
 atypical_rains_mx/
 ├── README.md
 ├── PLAN.md                          # Plan de acción detallado por tarea
+├── run_all.sh                       # Ejecuta el pipeline completo T1–T3.5
 ├── docs/
 │   ├── UNAM_IIMAS_PCIC_Anomalocaris_ResearchProposal_AtypicalRains.pdf
 │   └── informe_tecnico.md           # Informe técnico de las fases T1–T3.5
@@ -195,10 +231,11 @@ atypical_rains_mx/
 │   ├── compositional.py   # T3.3 — Transformaciones CLR e ILR-SBP
 │   ├── clustering.py      # T3.4 — K-Means, Ward, GMM, Gap, Jaccard
 │   ├── validation.py      # T3.5 — Concordancia, mapas, etiquetas climatológicas
+│   ├── voronoi_map.py     # Mapa de teselación de Voronoi (k=28)
 │   ├── report.py          # Generador del reporte técnico final (PDF/ReportLab)
 │   └── slides.py          # Generador de la presentación (PPTX/python-pptx)
 ├── outputs/
-│   ├── figures/           # 27 figuras PNG (130 dpi)
+│   ├── figures/           # 27 figuras PNG · 900 DPI · etiquetas en inglés
 │   └── reports/           # Reportes generados por el pipeline
 └── tests/
     └── __init__.py
@@ -260,7 +297,17 @@ T1.1 ──→ T1.2 ──→ T1.3 ──→ T1.4
                                               └──→ T3.1 ──→ T3.2 ──→ T3.3 ──→ T3.4 ──→ T3.5
 ```
 
-### Pipeline completo (desde la raíz del repositorio)
+### Pipeline completo — script shell (recomendado)
+
+```bash
+./run_all.sh
+```
+
+Ejecuta todos los módulos en orden de dependencias usando el entorno
+`lluvia` mediante `conda run`, sin requerir activación previa del entorno.
+Si algún módulo falla, la ejecución se detiene con código de error no nulo.
+
+### Pipeline completo — Python
 
 ```python
 from src.loading       import load_and_clean
@@ -273,13 +320,14 @@ from src.coda_prep     import run_t3_1, run_t3_2
 from src.compositional import run_t3_3
 from src.clustering    import run_t3_4
 from src.validation    import run_t3_5
+from src.voronoi_map   import main as run_voronoi
 from src.report        import run_report
 from src.slides        import run_slides
 
 load_and_clean(); run_t1_2(); run_t1_3(); run_t1_4()
 run_t2_1(); run_t2_2(); run_t2_3(); run_t2_4(); run_t2_5()
 run_t3_1(); run_t3_2(); run_t3_3(); run_t3_4(); run_t3_5()
-run_report(); run_slides()
+run_voronoi(); run_report(); run_slides()
 ```
 
 ### Módulo individual
@@ -288,6 +336,7 @@ run_report(); run_slides()
 python -m src.missing        # T1.2 — diagnóstico de datos faltantes
 python -m src.anomalies      # T2.1–T2.4 — detección de anomalías
 python -m src.clustering     # T3.4 — clustering composicional
+python -m src.voronoi_map    # Mapa Voronoi k=28
 ```
 
 ### Verificación rápida de outputs
