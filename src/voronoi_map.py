@@ -50,7 +50,7 @@ OUTPUT_FIG = FIGURES / "mapa_voronoi_k28.png"
 
 # ── Constantes ─────────────────────────────────────────────────────────────────
 K = 28
-DPI = 900
+DPI = 600
 _BBOX = (
     MEXICO_BBOX["lon_min"],
     MEXICO_BBOX["lat_min"],
@@ -310,7 +310,7 @@ def plot_voronoi_map(
             cx, cy,
             f"C{k_id:02d}\nn={n}",
             ha="center", va="center",
-            fontsize=5.5,
+            fontsize=11,
             zorder=6,
             bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.55),
         )
@@ -328,12 +328,11 @@ def plot_voronoi_map(
     ax.legend(
         handles=handles,
         ncol=2,
-        fontsize=7,
+        fontsize=9,
         title="Cluster  (n = stations)",
-        title_fontsize=8,
-        loc="upper left",
-        bbox_to_anchor=(1.01, 1.0),
-        borderaxespad=0,
+        title_fontsize=9,
+        loc="upper right",
+        borderaxespad=0.8,
         framealpha=0.92,
         handlelength=1.4,
     )

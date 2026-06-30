@@ -314,7 +314,7 @@ def _plot_consolidation_summary(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_consolidation_summary.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

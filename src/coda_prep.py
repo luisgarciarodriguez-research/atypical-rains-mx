@@ -231,7 +231,7 @@ def _plot_subset_summary(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "coda_subset_selection.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -595,7 +595,7 @@ def _plot_zero_treatment(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "coda_zero_treatment.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

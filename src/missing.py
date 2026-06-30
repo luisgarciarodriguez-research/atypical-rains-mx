@@ -92,7 +92,7 @@ def plot_datos_faltantes_matrix(df: pd.DataFrame, rain_cols: list, rain_col_map:
 
     fig.tight_layout()
     out = FIGURES / "missing_matrix.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -149,7 +149,7 @@ def plot_missing_by_state_year(
 
     fig.tight_layout()
     out = FIGURES / "missing_by_state_year.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -381,7 +381,7 @@ def plot_biserial_correlations(
 
     fig.tight_layout()
     out = FIGURES / "missing_biserial.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -539,7 +539,7 @@ def plot_dropout_analysis(dropout_df: pd.DataFrame, rain_cols: list) -> Path:
     fig.tight_layout()
 
     out = FIGURES / "missing_dropout.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -596,7 +596,7 @@ def plot_dropout_temporal_map(
     fig.tight_layout()
 
     out = FIGURES / "missing_dropout_temporal.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

@@ -175,7 +175,7 @@ def plot_all_maps(df: pd.DataFrame, k: int = 14) -> Path:
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "regime_maps.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -237,7 +237,7 @@ def plot_compositional_profiles(
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / f"cluster_profiles_{method}.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -399,7 +399,7 @@ def plot_concordance(ari_mat: pd.DataFrame, nmi_mat: pd.DataFrame) -> Path:
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "method_concordance.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

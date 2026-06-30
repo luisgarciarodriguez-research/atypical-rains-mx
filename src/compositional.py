@@ -312,7 +312,7 @@ def _plot_logratio_summary(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "coda_logratio_transforms.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

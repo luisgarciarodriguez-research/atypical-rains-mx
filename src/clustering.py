@@ -308,7 +308,7 @@ def _plot_clustering_diagnostics(
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "clustering_diagnostics.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

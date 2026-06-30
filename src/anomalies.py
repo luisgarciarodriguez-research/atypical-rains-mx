@@ -262,7 +262,7 @@ def _plot_capa1_summary(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_capa1_summary.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -647,7 +647,7 @@ def _plot_capa2_summary(
     fig.tight_layout()
 
     out = FIGURES / "anomaly_capa2_summary.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -1046,7 +1046,7 @@ def _plot_capa3_summary(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_capa3_summary.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 
@@ -1498,7 +1498,7 @@ def _plot_capa4_summary(
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "anomaly_capa4_summary.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return out
 

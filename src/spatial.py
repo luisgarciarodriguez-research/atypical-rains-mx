@@ -213,7 +213,7 @@ def t1_4_1_coverage_map(df: pd.DataFrame, verbose: bool = True) -> Path:
 
     out = FIGURES / "map_coverage.png"
     fig.tight_layout()
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     if verbose:
         print(f"    → {out.name}")
@@ -312,7 +312,7 @@ def t1_4_2_kriging_map(
 
     out = FIGURES / "map_kriging.png"
     fig.tight_layout()
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     if verbose:
         print(f"    → {out.name}")
@@ -410,7 +410,7 @@ def t1_4_3_seasonal_maps(
     )
 
     out = FIGURES / "map_seasonal.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     if verbose:
         print(f"    → {out.name}")

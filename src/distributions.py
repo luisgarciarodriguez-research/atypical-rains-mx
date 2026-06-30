@@ -155,7 +155,7 @@ def t1_3_1_histogram(
                  fontsize=11, y=1.01)
     fig.tight_layout()
     out = FIGURES / "dist_histogram.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return moments, out
 
@@ -219,7 +219,7 @@ def t1_3_2_seasonal(
 
     out1 = FIGURES / "dist_seasonal_boxplot.png"
     fig1.tight_layout()
-    fig1.savefig(out1, dpi=900, bbox_inches="tight")
+    fig1.savefig(out1, dpi=600, bbox_inches="tight")
     plt.close(fig1)
 
     # PCI por estación
@@ -277,7 +277,7 @@ def t1_3_2_seasonal(
     fig2.suptitle("T1.3.2 — Precipitation Concentration Index (Oliver, 1980)", fontsize=11)
     fig2.tight_layout()
     out2 = FIGURES / "dist_pci.png"
-    fig2.savefig(out2, dpi=900, bbox_inches="tight")
+    fig2.savefig(out2, dpi=600, bbox_inches="tight")
     plt.close(fig2)
 
     monthly_stats_df = pd.DataFrame(monthly_stats)
@@ -339,7 +339,7 @@ def t1_3_3_state_month_heatmap(
     )
 
     out = FIGURES / "dist_state_month_clustermap.png"
-    g.fig.savefig(out, dpi=900, bbox_inches="tight")
+    g.fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(g.fig)
     return matrix, out
 
@@ -442,7 +442,7 @@ def t1_3_4_stl_mannkendall(
                  fontsize=12, y=1.01)
     fig.tight_layout()
     out = FIGURES / "dist_stl.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     return stl_stats, out
 
@@ -544,7 +544,7 @@ def t1_3_5_variogram(
 
     out = FIGURES / "dist_variogram.png"
     fig.tight_layout()
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
 
     return {

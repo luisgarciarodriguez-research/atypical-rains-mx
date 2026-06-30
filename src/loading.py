@@ -228,7 +228,7 @@ def _plot_station_coverage(df, out_bbox_mask):
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     out = FIGURES / "T1.1.3_station_coverage.png"
-    fig.savefig(out, dpi=900, bbox_inches="tight")
+    fig.savefig(out, dpi=600, bbox_inches="tight")
     plt.close(fig)
     print(f"         Mapa guardado en: {out}")
 
